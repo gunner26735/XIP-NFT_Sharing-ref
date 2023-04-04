@@ -32,21 +32,32 @@ Created: 2023-04-04
         - Now only user is required to click on send button to send the NFT.
         - At receiver side we have to slice the string and check wether the starting 4 letters are "\nft" or not if they are then call "NftCard.jsx".
         - Following are steps which you need to go through to implement the NFT sharing module:
-            1. Copy a file named `Nft.jsx` which will fetch the NFT in which we required a walletAddress and UseState "linkToSend, setLinkToSend" all these should be global context [Nft File Link](https://github.com/aeyshubh/XIP-payment-ref/blob/main/tokenAbi.js "ABI reference"),
-            2. Now we only have to set the TextBox when there is some value in `linkToSend` UseState like this ```
-            useEffect(()=>{
+            1. Copy a file named [`Nft.jsx`](https://github.com/gunner26735/XIP-NFT_Sharing-ref/blob/main/Nft.jsx "NFT") which will fetch the NFT in which we required a walletAddress and UseState "linkToSend, setLinkToSend" all these should be global context.
+            2. Now we only have to set the TextBox when there is some value in `linkToSend` UseState like this 
+            ``` protobuf 
+                useEffect(()=>{
                 if(linkToSend){
                 setMsgTxt(linkToSend);
                 setLinkToSend("");
                 }
-            })```
-            3. For displaying the NFT Message we required to create a `Nftcard.jsx` component this will display the NFT as an image. Here we are slicing the string where 0-4 represent the type of message such as an NFT type.  
+            })
+            ```
+            3. For displaying the NFT Message we required to create a [`Nftcard.jsx`](https://github.com/gunner26735/XIP-NFT_Sharing-ref/blob/main/NftCard.jsx "NFTCard") component this will display the NFT as an image. Here we are slicing the string where 0-4 represent the type of message such as an NFT type. 
             4. Example: 
-                ``` 
+             ``` protobuf 
             if((msg.content).slice(0,4) === '/nft'){
               return <NftCard key={msg.id} msg={msg} />;
-            }```
+            }
+            ```
     - In above all the steps , step 2 & 4 are needed to be added explicitly or everything else are created as an component
+    - A format for fetching API keys of different chain for NFT 
+    ``` protobuf
+    chains={
+            1   :"alchemy-api-url",
+            137 :"alchemy-api-url"
+        }
+     ```
+    
     
 ## Rationale
 
@@ -67,7 +78,8 @@ Created: 2023-04-04
 
 ## Reference Implementation
 
-Payment Reference Implementation : [Payment Reference code](https://github.com/aeyshubh/XIP-payment-ref/blob/main/sendPayments.js "Javascript payment code")
+- NFT Fetching Implementation   : [Nft.jsx](https://github.com/gunner26735/XIP-NFT_Sharing-ref/blob/main/Nft.jsx "NFT")
+- NFT Displaying Implementation : [Nftcard.jsx](https://github.com/gunner26735/XIP-NFT_Sharing-ref/blob/main/NftCard.jsx "NFTCard")
 
 ## Security Considerations
 
