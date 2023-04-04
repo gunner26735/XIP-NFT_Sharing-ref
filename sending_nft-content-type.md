@@ -13,7 +13,6 @@ Created: 2023-04-04
 
 - NFT : This module usually fetch all the NFT's of the connected user and display in the separate tab. Currently, only NFT's of Polygon chain are fetched but more can be added as well, to fetch NFT we are using Alchemy. To send an NFT user have to select the NFT and its link will be automatically attached in text box, and by simply clicking on send button the NFT will be Send .And only one NFT can be shared at a time.    
 
-Abstract is a multi-sentence (short paragraph) technical summary. This should be a very terse and human-readable version of the specification section. Someone should be able to read only the abstract to get the gist of what this specification does.
 
 ## Motivation
 
