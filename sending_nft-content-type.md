@@ -23,42 +23,32 @@ Abstract is a multi-sentence (short paragraph) technical summary. This should be
 
 ## Specification
 
-- Payments:
+- NFT Sharing:
     - Must things to implement :
-        - The first thing to keep in mind while integrating Payments in your app is the format in which the transfer function will be called.
-        - The format we suggest : `\pay [amount] [tokenName]`
-        - Eg : \pay 5 usdc ~ it's just like saying Hi,I want to pay you 5 USDC.  
-        - To implement the above you could fetch the message from the users side then split it into array using ".split" method in Javascript .
-        - The user can write "USDC" or "usdc" or "UsDc" cauz it's user so first you have to convert the given command into lower case and accordingly you fetch the contract address.
-        - After splitting you take array[1] and array[2] values which will be the Amount and the token name.
-        - From a dictionary you fetch it's chain and the Token's deployed contract addess and call a transfer function on it.
-        - Following are steps which you need to go through to call the "transfer" function of a contract.
-            1. Create a ABI of ERC20 token,every ERC20 token have same `ABI` ,heres a reference [ABI Reference](https://github.com/aeyshubh/XIP-payment-ref/blob/main/tokenAbi.js "ABI reference"),you could use this ABI too.
-            2. Import it into the file in which you want to call the transfer function.
-            3. Create a variable for storing the token contract address of the token on which you want to call the token transfer event. Syntax :  const tokenAddress = '0xc94dd466416A7dFE166aB2cF916D3875C049EBB7';
-            4. Create a contract reference variable for calling the transfer function of the Token's contract. Syntax : const tokenContract = new ethers.Contract(tokenAddress, abi2, signer);
-            5. Next up ,you will call the `transfer` function in which _receiver will be the address of the person you are chatting with and _amount is the amount user wants to send which can be fetched by array[2] . Syntax : const writen = await tokenContract.transfer(_receiver, ethers.utils.parseEther(_amount));
-            6. The transfer function will return a promise and on completion of the promise you can get the hash of the transaction to prove your payment . Syntax : console.log("Payment Hash" + writen.hash);
-    - One very important thing which you need to keep in mind is the Chain which the user is on,If the Token address is of Polygon chain and the user is on Ethereum chain then the transaction will go through but it would fail eventually and the gas would be wasted.
-    - So if the user is on Ethereum chain then the token Address ahould be of Ethereum chain.
-    - A format like this should be followed :
-       ```protobuf 
-       chains={
-            1:{
-                "usdc":"Contract Address",
-                "dai":"Contract Address",
-                "wbtc":"Contract Address"
-            },
-            137:{
-                "usdc":"Contract Address",
-                "dai":"Contract Address",
-                "wbtc":"Contract Address"
-            }
-        }
-        ```
-    - When User connects the wallet you can get the Chain Id and get the contract address accordingly .
+        - First, we have to add the "Nft.jsx" component  which will fetch NFT and display it. 
+        - It can be displayed at anywhere.
+        - We have also added the code for returning the Link of selected NFT for that we are using an Use State named setLinkToSend & LinkToSend which are declared as a Global Context. 
+        - Once User select an NFT we call setLinkToSend useState and set the link but also appending the "/nft". This would help to bifurcate between a normal message and a NFT link.This all are added in NFT.jsx file.
+        - example message : /nft https://i.seadn.io/gae/
+        - Now only user is required to click on send button to send the NFT.
+        - At receiver side we have to slice the string and check wether the starting 4 letters are "\nft" or not if they are then call "NftCard.jsx".
+        - Following are steps which you need to go through to implement the NFT sharing module:
+            1. Copy a file named `Nft.jsx` which will fetch the NFT in which we required a walletAddress and UseState "linkToSend, setLinkToSend" all these should be global context [Nft File Link](https://github.com/aeyshubh/XIP-payment-ref/blob/main/tokenAbi.js "ABI reference"),
+            2. Now we only have to set the TextBox when there is some value in `linkToSend` UseState like this ```
+            useEffect(()=>{
+                if(linkToSend){
+                setMsgTxt(linkToSend);
+                setLinkToSend("");
+                }
+            })```
+            3. For displaying the NFT Message we required to create a `Nftcard.jsx` component this will display the NFT as an image. Here we are slicing the string where 0-4 represent the type of message such as an NFT type.  
+            4. Example: 
+                ``` 
+            if((msg.content).slice(0,4) === '/nft'){
+              return <NftCard key={msg.id} msg={msg} />;
+            }```
+    - In above all the steps , step 2 & 4 are needed to be added explicitly or everything else are created as an component
     
-
 ## Rationale
 
 - We went with the command format insted of UI because it can get complicated while making the UI wheres it's easier to use commands.
@@ -66,17 +56,15 @@ Abstract is a multi-sentence (short paragraph) technical summary. This should be
 
 ## Backwards Compatibility
 
-- The only Compatibilatiy issue which can happen is the Chain compatibility and it's solution is also stated in the Specification section i.e to fetch the current chain on which the user is then fetch the token address of the token which the user wants to transfer OF that chain and call the transfer function on it.
-- Another Compatibility issue can be the token which the user wants to transfer is not supported on the platform and in this case a error should be thrown.
-- There can be a page to hear about User's request to addup a new token into whichever application you are developying[optional].
+- The only Compatibilatiy issue which can happen is the Chain compatibility. As for now only NFT's of Polygon Chain are provided to user for sharing. But this can be solved easily but adding more chains.
+- There can be a page to hear about User's request for adding additional chain support such as Arbitrum, Avalanch , etc.[optional].
 
 ## Test Cases
 
-- The only testcase the application will fail is the case in which the order of sending the command is changed i.e The correct order is "/pay 5 USDC".
-    - The user can mistaken it for "\pay 5 USDC" 
-    - "/pya USDC 5"
-    - "/pay USDD 5"
-    - In such cases An Alert shall be provided specifying the correct order .
+- The application will be failed in following cases:
+    - when user erase the /nft from textbox 
+    - when user erase the link of image 
+    - when user append extra text after the link
 
 ## Reference Implementation
 
@@ -87,6 +75,7 @@ Payment Reference Implementation : [Payment Reference code](https://github.com/a
 - This XIP is preety much secured as we are calling the already deployed functions of the smart contract.
 - Our code dosen't involve any intermediate smart contract through which the payments are going so the User/sender is the sole owner of it's tokens.
 - No Approve functions are required for payments or Nfts hence no one on behalf of the sender can trigger specific events.
+- No transaction are required to sign for fetching or sending of the NFT's.
 - For the transaction to go through the sender has to approve it in his Web3 Wallet .
 
 ## Copyright
