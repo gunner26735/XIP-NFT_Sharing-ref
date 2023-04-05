@@ -1,9 +1,9 @@
 ---
 Title: Payment and Nfts as content types
-Description: Xip for payments and Nfts as content types 
+Description: Xip Nfts as content types 
 Authors: Shubham Patel (@aeyshubh), Siddharth Shukla (@gunner26735), Krishn Panchal (@phovious14)
 Satus: Draft
-Suggested-XIP-Number : 3
+Suggested-XIP-Number : 4
 Type: Standards Track
 Category: XRC
 Created: 2023-04-04
@@ -83,11 +83,9 @@ Created: 2023-04-04
 
 ## Security Considerations
 
-- This XIP is preety much secured as we are calling the already deployed functions of the smart contract.
-- Our code dosen't involve any intermediate smart contract through which the payments are going so the User/sender is the sole owner of it's tokens.
-- No Approve functions are required for payments or Nfts hence no one on behalf of the sender can trigger specific events.
+- This XIP is preety much secured as we are only fetching NFT's of user and sharing the NFT image URL only.
+- No Approve functions are required for Nfts hence no issue for any account theft.
 - No transaction are required to sign for fetching or sending of the NFT's.
-- For the transaction to go through the sender has to approve it in his Web3 Wallet .
 
 ## Copyright
 
